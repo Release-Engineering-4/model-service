@@ -5,11 +5,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - id: lower-repo
+        name: Repository to lowercase
+        run: |
+          echo "repository=${GITHUB_REPOSITORY@L}" >> $GITHUB_OUTPUT
       - name: Registry Login (ghcr.io)
         run: |
           echo "${{secrets.GH_TOKEN}}" | docker login ghcr.io -u ${{github.actor}} --password-stdin
       - name: Build and Push Docker Image
         run: |
-          IMG=ghcr.io/${{github.repository}}
+          IMG=ghcr.io/${{steps.lower-repo.outputs.repository}}
           docker build --tag $IMG:latest .
           docker push --all-tags $IMG
