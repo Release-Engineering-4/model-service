@@ -39,7 +39,7 @@ def predict():
     trained_model = load_model("models/trained_model.h5")
     print("loaded model")
     data = request.get_json()
-    input_data = np.array(data['input_data'])
+    input_data = MLPreprocessor.tokenize_pad_data(data['url'])
 
     y_pred = trained_model.predict(input_data)
     y_pred_binary = (y_pred > 0.5).astype(int)
