@@ -36,12 +36,16 @@ def predict():
               type: float
               example: 0.123
     """
-    trained_model = load_model("models/trained_model.h5")
-    print("loaded model")
     data = request.get_json()
-    input_data = MLPreprocessor.tokenize_pad_data(data['url'])
+    url_string = data['url']
+    print(url_string)
+    input_data = MLPreprocessor().tokenize_pad_data([url_string])
+    # TODO: Load model and predict from there
+    # trained_model = load_model("models/trained_model.h5")
+    # print("loaded model")
 
-    y_pred = trained_model.predict(input_data)
+    # y_pred = trained_model.predict(input_data)
+    y_pred = 0.74
     y_pred_binary = (y_pred > 0.5).astype(int)
 
     return jsonify({'prediction_binary': y_pred_binary, 'prediction': y_pred})
