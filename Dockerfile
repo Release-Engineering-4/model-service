@@ -1,11 +1,11 @@
 FROM python:3.10-slim
-WORKDIR /root/
-COPY requirements.txt .
 
-RUN pip install -r requirements.txt
+WORKDIR /app
+COPY . /app
 
-COPY src src/
-COPY models models/
+RUN pip install poetry
+RUN poetry install --no-cache
 
-ENTRYPOINT ["python"]
-CMD ["src/app.py"]
+EXPOSE 5000
+
+CMD ["poetry", "run", "python", "model_service/app.py"]

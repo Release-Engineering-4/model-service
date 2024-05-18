@@ -37,8 +37,8 @@ def predict():
     """
     data = request.get_json()
     url_string = data['url']
-    processor = MLPreprocessor(200, "../models/tokenizer.pkl", None)
-    trained_model = load_model("../models/trained_model.h5")
+    processor = MLPreprocessor(200, "models/tokenizer.pkl", None)
+    trained_model = load_model("models/trained_model.h5")
     processed_input = processor.tokenize_pad_data([url_string])
     prediction = trained_model.predict(processed_input)
     binary_prediction = (np.array(prediction) > 0.5).astype(int)
