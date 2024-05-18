@@ -1,9 +1,8 @@
 from flask import Flask, request, jsonify
 from flasgger import Swagger
 from keras.models import load_model
-import numpy as np
 from remla_preprocess.pre_processing import MLPreprocessor
-
+import numpy as np
 
 app = Flask(__name__)
 swagger = Swagger(app)
@@ -38,17 +37,16 @@ def predict():
     """
     data = request.get_json()
     url_string = data['url']
-    print(url_string)
-    input_data = MLPreprocessor().tokenize_pad_data([url_string])
-    # TODO: Load model and predict from there
-    # trained_model = load_model("models/trained_model.h5")
-    # print("loaded model")
+    processor = MLPreprocessor(200, "../models/tokenizer.pkl", None)
+    trained_model = load_model("../models/trained_model.h5")
+    processed_input = processor.tokenize_pad_data([url_string])
+    prediction = trained_model.predict(processed_input)
+    binary_prediction = (np.array(prediction) > 0.5).astype(int)
 
-    # y_pred = trained_model.predict(input_data)
-    y_pred = 0.74
-    y_pred_binary = (y_pred > 0.5).astype(int)
+    prediction = prediction.tolist()
+    binary_prediction = binary_prediction.tolist()
 
-    return jsonify({'prediction_binary': y_pred_binary, 'prediction': y_pred})
+    return jsonify({"prediction_binary": binary_prediction, "prediction": prediction})
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080, debug=True)
