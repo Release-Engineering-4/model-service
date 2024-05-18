@@ -4,7 +4,8 @@ WORKDIR /app
 COPY . /app
 
 RUN pip install poetry
-RUN poetry install --no-cache
+RUN poetry install
+RUN mkdir /models
 
 EXPOSE 5000
 
