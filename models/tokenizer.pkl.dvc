@@ -1,0 +1,5 @@
+outs:
+- md5: abf832462a6f2909c98537c3a318e54e
+  size: 2359
+  hash: md5
+  path: tokenizer.pkl

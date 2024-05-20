@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "model-service"
+version = "0.1.0"
+description = "Wrapper service for URL phishing model."
+authors = ["Razvan Mihai Popescu <R.Popescu-3@student.tudelft.nl>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+flasgger = "^0.9.7.1"
+Flask = "^3.0.3"
+numpy = "^1.26.4"
+remla-preprocess = "0.1.1"
+keras = "2.8"
+dvc = "3.50.2"
+dvc-gdrive = "^3.0.1"
+pandas = "^2.2.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
