@@ -37,14 +37,17 @@ def predict():
     """
     data = request.get_json()
     url_string = data['url']
-    processor = MLPreprocessor(200, "/models/tokenizer.pkl", None)
-    trained_model = load_model("/models/trained_model.h5")
-    processed_input = processor.tokenize_pad_data([url_string])
-    prediction = trained_model.predict(processed_input)
-    binary_prediction = (np.array(prediction) > 0.5).astype(int)
+    try:
+      processor = MLPreprocessor(200, "/models/tokenizer.pkl", None)
+      trained_model = load_model("/models/trained_model.h5")
+      processed_input = processor.tokenize_pad_data([url_string])
+      prediction = trained_model.predict(processed_input)
+      binary_prediction = (np.array(prediction) > 0.5).astype(int)
 
-    prediction = prediction.tolist()
-    binary_prediction = binary_prediction.tolist()
+      prediction = prediction.tolist()
+      binary_prediction = binary_prediction.tolist()
+    except:
+      return jsonify({"prediction_binary": [0], "prediction": [[0.0]]})
 
     return jsonify({"prediction_binary": binary_prediction, "prediction": prediction})
 
