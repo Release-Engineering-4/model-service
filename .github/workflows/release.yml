@@ -17,7 +17,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-      
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -59,8 +59,9 @@ jobs:
         password: ${{ secrets.GHR_TOKEN }}
 
     - name: Build and push Docker image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         context: .
+        file: Dockerfile
         push: true
         tags: ghcr.io/remla24-team4/model-service:${{ github.ref_name }}
