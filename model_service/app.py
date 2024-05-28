@@ -1,3 +1,7 @@
+"""
+Model wrapper
+"""
+
 from flask import Flask, request, jsonify
 from flasgger import Swagger
 import gdown
@@ -53,7 +57,8 @@ def predict():
     prediction = prediction.tolist()
     binary_prediction = binary_prediction.tolist()
 
-    return jsonify({"prediction_binary": binary_prediction, "prediction": prediction})
+    return jsonify({"prediction_binary": binary_prediction,
+                    "prediction": prediction})
 
 
 if __name__ == "__main__":
