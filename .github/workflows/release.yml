@@ -56,5 +56,5 @@ jobs:
 
       - name: 'Build Inventory Image'
         run: |
-          docker build . --tag ghcr.io/Release-Engineering-4/model-service:latest
-          docker push ghcr.io/Release-Engineering-4/model-service:latest  
+          docker build . --tag ghcr.io/release-engineering-4/model-service:latest
+          docker push ghcr.io/release-engineering-4/model-service:latest  
