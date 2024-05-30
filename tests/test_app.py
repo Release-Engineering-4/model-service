@@ -29,4 +29,3 @@ def test_prediction():
         response = c.post('/predict', json={"url": SAMPLE_URL})
         # Check if values are correct
         assert isinstance(response.json["prediction"][0][0], float)
-
