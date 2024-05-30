@@ -54,10 +54,8 @@ def predict():
     prediction = trained_model.predict(processed_input)
     binary_prediction = (np.array(prediction) > 0.5).astype(int)
 
-      prediction = prediction.tolist()
-      binary_prediction = binary_prediction.tolist()
-    except:
-      return jsonify({"prediction_binary": [0], "prediction": [[0.0]]})
+    prediction = prediction.tolist()
+    binary_prediction = binary_prediction.tolist()
 
     return jsonify({"prediction_binary": binary_prediction,
                     "prediction": prediction})
