@@ -1,37 +1,63 @@
-name: Release
+name: Release Model Service
+
 on:
   push:
-    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+    branches:
+      - 'main'
+    tags:
+      - 'v*.*.*'  
+  pull_request:
+    branches:
+      - 'main'
+
+
 jobs:
-  build:
+  linting:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - uses: actions/checkout@v3
-      - id: lower-repo
-        name: Repository to lowercase
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.10.11
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Pylint source directories
+      run: poetry run pylint $(git ls-files '*.py')
+    
+    - name: Lint with flake8
+      run: poetry run flake8 .
+
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4
+
+      - name: 'Login to GitHub Container Registry'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GHR_TOKEN}}
+
+      - name: 'Build Inventory Image'
         run: |
-          echo "repository=${GITHUB_REPOSITORY@L}" >> $GITHUB_OUTPUT
-      - name: Registry Login (ghcr.io)
-        run: |
-          echo "${{secrets.GH_TOKEN}}" | docker login ghcr.io -u ${{github.actor}} --password-stdin
-      - name: Parse version info from tag
-        run: |
-          # GITHUB_REF is like refs/tags/v2.3.5, so strip the first 11 chars
-          VERSION=${GITHUB_REF:11}
-          MAJOR=`echo "$VERSION" | cut -d . -f 1`
-          MINOR=`echo "$VERSION" | cut -d . -f 2`
-          PATCH=`echo "$VERSION" | cut -d . -f 3`
-          echo "version=$VERSION" >> $GITHUB_ENV
-          echo "version_major=$MAJOR" >> $GITHUB_ENV
-          echo "version_minor=$MINOR" >> $GITHUB_ENV
-          echo "version_patch=$PATCH" >> $GITHUB_ENV
-      - name: Build and Push Docker Image
-        run: |
-          IMG=ghcr.io/${{steps.lower-repo.outputs.repository}}
-          docker build \
-            --tag $IMG:${{env.version}} \
-            --tag $IMG:${{env.version_major}}.${{env.version_minor}}.latest \
-            --tag $IMG:${{env.version_major}}.latest \
-            --tag $IMG:latest \
-            .
-          docker push --all-tags $IMG
+          docker build . --tag ghcr.io/release-engineering-4/model-service:${{ github.ref_name }}
+          docker push ghcr.io/release-engineering-4/model-service:${{ github.ref_name }} 
