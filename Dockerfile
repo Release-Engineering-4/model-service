@@ -5,7 +5,7 @@ COPY . /app
 
 RUN pip install poetry
 RUN poetry install
-RUN mkdir /models
+
 
 EXPOSE 5000
 
