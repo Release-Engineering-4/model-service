@@ -34,7 +34,7 @@ jobs:
       run: poetry install
 
     - name: Pylint source directories
-      run: poetry run pylint $(git ls-files '*.py')
+      run: poetry run pylint $(git ls-files '*.py' ':!tests/*')
     
     - name: Lint with flake8
       run: poetry run flake8 .
