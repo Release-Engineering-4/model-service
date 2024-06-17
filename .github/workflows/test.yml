@@ -40,5 +40,17 @@ jobs:
       - name: Install Dependencies
         run: poetry install
 
-      - name: Run tests
-        run: poetry run pytest
+      - name: Run tests with coverage
+        run: |
+          poetry run coverage run -m pytest
+          poetry run coverage report -m -i
+          poetry run coverage html -i
+
+      - name: Check coverage threshold
+        run: poetry run coverage report --fail-under=100 -i
+      
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: htmlcov/
