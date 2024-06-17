@@ -47,7 +47,7 @@ jobs:
           poetry run coverage html -i
 
       - name: Check coverage threshold
-        run: poetry run coverage report --fail-under=100
+        run: poetry run coverage report --fail-under=100 -i
       
       - name: Upload coverage report
         uses: actions/upload-artifact@v2
