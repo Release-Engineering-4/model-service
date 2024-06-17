@@ -45,13 +45,13 @@ coverage run -m pytest
 To generate the coverage report use:
 
 ```bash
-coverage report -m
+coverage report -m -i
 ```
 
 To generate the html of the coverage report use:
 
 ```bash
-coverage html
+coverage html -i
 ```
 
 
